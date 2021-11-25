@@ -31,7 +31,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     public void configure(WebSecurity web) throws Exception {
-
+        web.ignoring()
+                .antMatchers("/webjars/**")
+                .antMatchers("/application/**")
+                .antMatchers("/css/**")
+                .antMatchers("/javascript-libs/noty/**")
+                .antMatchers("/react-libs/**");
     }
 
     @Override
