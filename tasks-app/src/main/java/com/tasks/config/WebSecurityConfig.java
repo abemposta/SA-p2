@@ -31,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     public void configure(WebSecurity web) throws Exception {
+
     }
 
     @Override
@@ -42,14 +43,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET,  "/swagger-resources/**").permitAll()
             .antMatchers(HttpMethod.GET,  "/v2/api-docs").permitAll()
 
-            // ENDPOINT /projects
+            // ENDPOINT /projects c)+b4)
                 .antMatchers(HttpMethod.POST,  "/api/projects").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,  "/api/projects/{id}").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,  "/api/projects/{id}").hasRole("ADMIN")
+
+                //b3
+                .antMatchers(HttpMethod.GET,  "/dashboard/").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+                .antMatchers(HttpMethod.GET,  "/api/projects").permitAll()
+                .antMatchers(HttpMethod.GET,  "/api/projects/{id}").permitAll()
                 .antMatchers(HttpMethod.GET,  "/api/projects/{id}/tasks").permitAll()
+                .antMatchers(HttpMethod.GET,  "/api/comments/{id}").permitAll()
+                .antMatchers(HttpMethod.GET,  "/api/tasks").permitAll()
+                .antMatchers(HttpMethod.GET,  "/api/task/i{d}").permitAll()
 
 
-            // ENDPOINT /tasks
+            // ENDPOINT /tasks c)+b4)
                 .antMatchers(HttpMethod.POST,  "/api/tasks").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,  "/api/tasks/{id}").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,  "/api/tasks/{id}").hasRole("ADMIN")
@@ -60,17 +70,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,  "/comments/{id}").hasAnyRole("USER","ADMIN")
 
 
-            // ENDPOINT /users
+            // ENDPOINT /users c)+b4)
                 .antMatchers(HttpMethod.GET,  "/api/users").hasRole("ADMIN")
+                .anyRequest().denyAll();
 
-                .anyRequest().permitAll();
 
-        //b2 ?¿?
-        //b3 permitAll a los 3 endpoints que dice enunciado
-        //b4 resto de enpoints check si tienen rol, si no anyRequest().denyAll
-
-        //3 endpoint.hasRole("role") o en el endpoint anotacion @PreAuthorize("hasRole('ROLE_ADMIN')") tb vale @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
-        //3 check en entidades p.e @PreAuthorize o @PostAuthorize( obj.user == authentication.user ) //check admin borre sus vainas
+        //3 ch
+        // eck en entidades p.e @PreAuthorize o @PostAuthorize( obj.user == authentication.user ) //check admin borre sus vainas
 
         //b1,b5
         http.addFilter( new JwtAuthorizationFilter(this.tokenProvider, customAuthenticationManager()))
