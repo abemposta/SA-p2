@@ -18,6 +18,7 @@ import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,6 +73,7 @@ public class TasksService {
     }
     
     @Transactional
+    @PostAuthorize("returnObject.project.admin.username == authentication.name")
     public Task update(Long id, String name, String description, String type, String username, Long projectId) 
         throws InstanceNotFoundException, InalidStateException, DuplicatedResourceException {
         Optional<User> user = userRepository.findById(username);
@@ -115,6 +117,7 @@ public class TasksService {
     }    
 
     @Transactional
+    @PostAuthorize("returnObject.owner.username == authentication.name")
     public Task changeResolution(Long id, TaskResolution resolution) 
             throws InstanceNotFoundException, InalidStateException {
         Optional<Task> optTask = tasksRepository.findById(id);
@@ -130,6 +133,7 @@ public class TasksService {
     }
     
     @Transactional
+    @PostAuthorize("returnObject.project.admin.username == authentication.name OR returnObject.owner.username == authentication.name")
     public Task changeProgress(Long id, byte progress) 
             throws InstanceNotFoundException, InalidStateException {
         Optional<Task> optTask = tasksRepository.findById(id);
@@ -148,6 +152,7 @@ public class TasksService {
     }
     
     @Transactional
+    @PostAuthorize("returnObject.project.admin.username == authentication.name")
     public Task changeState(Long id, TaskState state)  throws InstanceNotFoundException {
         
         Optional<Task> optTask = tasksRepository.findById(id);
