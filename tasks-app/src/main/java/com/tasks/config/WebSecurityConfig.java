@@ -3,8 +3,6 @@ package com.tasks.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,11 +14,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled=true)
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@EnableGlobalMethodSecurity(prePostEnabled = true, order = 1)
+@EnableTransactionManagement(order = 0)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -48,11 +47,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET,  "/swagger-resources/**").permitAll()
             .antMatchers(HttpMethod.GET,  "/v2/api-docs").permitAll()
 
-            // ENDPOINT /projects c)+b4)
-                .antMatchers(HttpMethod.POST,  "/api/projects").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE,  "/api/projects/{id}").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT,  "/api/projects/{id}").hasRole("ADMIN")
-
                 //b3
                 .antMatchers(HttpMethod.GET,  "/dashboard/").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/login").permitAll()
@@ -61,22 +55,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,  "/api/projects/{id}/tasks").permitAll()
                 .antMatchers(HttpMethod.GET,  "/api/comments/{id}").permitAll()
                 .antMatchers(HttpMethod.GET,  "/api/tasks").permitAll()
-                .antMatchers(HttpMethod.GET,  "/api/task/i{d}").permitAll()
+                .antMatchers(HttpMethod.GET,  "/api/task/{id}").permitAll()
 
+
+                // ENDPOINT /projects c)+b4)
+                .antMatchers(HttpMethod.POST,  "/api/projects/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE,  "/api/projects/{id}").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT,  "/api/projects/{id}").hasRole("ADMIN")
 
             // ENDPOINT /tasks c)+b4)
-                .antMatchers(HttpMethod.POST,  "/api/tasks").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST,  "/api/tasks/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,  "/api/tasks/{id}").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,  "/api/tasks/{id}").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST,  "/tasks/{id}/changeState").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST,  "/tasks/{id}/changeResolution").hasRole("USER")
-                .antMatchers(HttpMethod.POST,  "/tasks/{id}/changeProgress").hasAnyRole("USER","ADMIN")
-                .antMatchers(HttpMethod.POST,  "/comments").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.POST,  "/tasks/{id}/changeState/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST,  "/tasks/{id}/changeResolution/").hasRole("USER")
+                .antMatchers(HttpMethod.POST,  "/tasks/{id}/changeProgress/").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.POST,  "/comments/").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.GET,  "/comments/{id}").hasAnyRole("USER","ADMIN")
 
 
             // ENDPOINT /users c)+b4)
-                .antMatchers(HttpMethod.GET,  "/api/users").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,  "/api/users/").hasRole("ADMIN")
                 .anyRequest().denyAll();
 
 

@@ -5,6 +5,7 @@ import com.tasks.business.entities.User;
 import com.tasks.business.exceptions.DuplicatedResourceException;
 import com.tasks.business.exceptions.InstanceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 import com.tasks.business.repository.ProjectsRepository;
 import com.tasks.business.repository.UsersRepository;
@@ -44,6 +45,7 @@ public class ProjectService {
     }
 
     @Transactional
+    @PostAuthorize("returnObject.admin.username == authentication.name")
     public Project update(Long projectId, String name, String description) 
             throws DuplicatedResourceException, InstanceNotFoundException {
         Optional<Project> project = projectsRepository.findById(projectId);
