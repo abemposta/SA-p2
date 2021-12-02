@@ -55,11 +55,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,  "/api/projects/{id}/tasks").permitAll()
                 .antMatchers(HttpMethod.GET,  "/api/comments/{id}").permitAll()
                 .antMatchers(HttpMethod.GET,  "/api/tasks").permitAll()
-                .antMatchers(HttpMethod.GET,  "/api/task/{id}").permitAll()
+                .antMatchers(HttpMethod.GET,  "/api/tasks/{id}").permitAll()
+                .antMatchers(HttpMethod.GET,  "/api/comments/{id}").permitAll()
 
 
                 // ENDPOINT /projects c)+b4)
-                .antMatchers(HttpMethod.POST,  "/api/projects/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST,  "/api/projects").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,  "/api/projects/{id}").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,  "/api/projects/{id}").hasRole("ADMIN")
 
@@ -67,20 +68,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,  "/api/tasks/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,  "/api/tasks/{id}").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,  "/api/tasks/{id}").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST,  "/tasks/{id}/changeState/").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST,  "/tasks/{id}/changeResolution/").hasRole("USER")
-                .antMatchers(HttpMethod.POST,  "/tasks/{id}/changeProgress/").hasAnyRole("USER","ADMIN")
-                .antMatchers(HttpMethod.POST,  "/comments/").hasAnyRole("USER","ADMIN")
-                .antMatchers(HttpMethod.GET,  "/comments/{id}").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.POST,  "/api/tasks/{id}/changeState").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST,  "/api/tasks/{id}/changeResolution").hasRole("USER")
+                .antMatchers(HttpMethod.POST,  "/api/tasks/{id}/changeProgress").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.POST,  "/api/comments/").hasAnyRole("USER","ADMIN")
 
 
             // ENDPOINT /users c)+b4)
-                .antMatchers(HttpMethod.GET,  "/api/users/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,  "/api/users").hasRole("ADMIN")
                 .anyRequest().denyAll();
 
-
-        //3 ch
-        // eck en entidades p.e @PreAuthorize o @PostAuthorize( obj.user == authentication.user ) //check admin borre sus vainas
 
         //b1,b5
         http.addFilter( new JwtAuthorizationFilter(this.tokenProvider, customAuthenticationManager()))
