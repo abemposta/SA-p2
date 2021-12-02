@@ -4,7 +4,7 @@ const projectService = {
     },
 
     createProject : (data, onSuccess, onError) => {
-        doFetch('api/projects/', $.extend({}, data, { method: 'post', status: 201 }), (headers) => {
+        doFetch('api/projects', $.extend({}, data, { method: 'post', status: 201 }), (headers) => {
             doFetch(headers.location, $.extend({}, data, { method: 'get', body: null, status: 200 }), 
                     onSuccess, onError);
         }, onError);
