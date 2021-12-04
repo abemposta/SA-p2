@@ -26,6 +26,10 @@ var Login = (props) => {
         }, onSuccess);
     };
     const handleSSO = () => {
+        var params = '?response_type=token&client_id=tasks_app&redirect_uri=http://localhost:8888/tasks-service/dashboard/loginOAuth&scope=&state=';
+        var authorizeEndpoint = 'http://localhost:7777/oauth-server/oauth/authorize'
+        var url =  authorizeEndpoint + params;
+        document.location = url;
     };
     return (
         <div className="row w-100">
