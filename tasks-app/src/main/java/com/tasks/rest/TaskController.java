@@ -96,8 +96,10 @@ public class TaskController {
     })
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> doRemoveTaskById(@PathVariable("id") Long id) throws InstanceNotFoundException {
-        tasksService.removeById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (tasksService.removeById(id)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @ApiOperation(value = "Change task state by id", authorizations = {@Authorization(value = "Bearer")})

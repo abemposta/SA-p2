@@ -19,6 +19,8 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +39,9 @@ public class TasksService {
     
     @Autowired
     private ProjectsRepository projectsRepository;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
     
     @Transactional
     @PostAuthorize("returnObject.project.admin.username == authentication.name")
@@ -199,12 +204,17 @@ public class TasksService {
     }
 
     @Transactional()
-    public void removeById(Long id) throws InstanceNotFoundException {
+    public boolean removeById(Long id) throws InstanceNotFoundException {
         Optional<Task> optTask = tasksRepository.findById(id);
         if(!optTask.isPresent()) {
             throw new InstanceNotFoundException(id, "Task" , MessageFormat.format("Task {0} does not exist", id));
         }
-        tasksRepository.delete(optTask.get());
+
+        if(optTask.get().getProject().getAdmin().getUsername().compareTo(SecurityContextHolder.getContext().getAuthentication().getName()) == 0 ){
+            tasksRepository.delete(optTask.get());
+            return true;
+        }
+        return false;
     }
     
     @Transactional
