@@ -39,6 +39,7 @@ public class TasksService {
     private ProjectsRepository projectsRepository;
     
     @Transactional
+    @PostAuthorize("returnObject.project.admin.username == authentication.name")
     public Task create(String name, String description, String type, String username, Long projectId) 
             throws DuplicatedResourceException, InstanceNotFoundException {
         Optional<User> user = userRepository.findById(username);
