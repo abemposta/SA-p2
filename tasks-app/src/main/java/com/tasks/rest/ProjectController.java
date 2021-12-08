@@ -91,8 +91,10 @@ public class ProjectController {
     })
     @RequestMapping(value = "/projects/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> doRemoveProjectById(@PathVariable("id") Long id) throws InstanceNotFoundException {
-        projectService.removeById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if(projectService.removeById(id)){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     
     @ApiOperation(value = "Get project tasks by project id")
